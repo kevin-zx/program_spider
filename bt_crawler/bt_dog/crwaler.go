@@ -17,7 +17,12 @@ func main() {
 		panic(err)
 	}
 
+	// 一些公用的selection
+	detailBox := doc.Find("#detail-box")
+	fmt.Println(detailBox)
+
 	btp := bt_crawler.BtProgram{}
+
 	btp.Title = doc.Find("#detail-box > div.box.box-blue > div.detail-title.fn-left > h2").Text()
 	aliasStr := doc.Find("#detail-box > div.box.box-blue > div.detail-title.fn-left > div").Text()
 	btp.Alias = strings.Split(aliasStr,"/")
@@ -39,11 +44,6 @@ func main() {
 		Te := doc.Find(fmt.Sprintf("#down-pl-list input:nth-child(%d)",i+1))
 		fmt.Println(Te.Attr("value"))
 	}
-
-	//playListBox := doc.Find("#detail-list .play-list-box")
-	//playListBox.Find("#btdown-pl-list")
-
-
 
 	fmt.Print(btp)
 }

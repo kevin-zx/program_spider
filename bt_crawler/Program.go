@@ -1,11 +1,11 @@
 package bt_crawler
 
-type BtProgram struct {
+type Program struct {
 	Title string
 	Alias []string
 	Status string
 	Mark string
-	Director string
+	Director Director
 	Type string
 	Language string
 	Area string
@@ -21,3 +21,24 @@ type BtProgram struct {
 }
 
 
+type Actor struct {
+	Name string
+
+}
+
+type Director struct {
+	Name string
+}
+
+type ThunderData struct{
+	URL string
+	Name string
+	Source string
+	Type string //magnet or thunder
+
+}
+type BaiduYunData struct{
+	URL string
+	Passwd string
+	Status string
+}

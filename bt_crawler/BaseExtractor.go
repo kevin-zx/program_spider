@@ -13,7 +13,7 @@ func (be *BaseExtractor) ExtractorProgram(doc *goquery.Document,platformUnique s
 		Alias:be.ExtractorAlias(),
 		Status:be.ExtractorStatus(),
 		Mark:be.ExtractorMark(),
-		Director:be.ExtractorDirector(),
+		Directors:be.ExtractorDirector(),
 		Type:be.ExtractorType(),
 		Languages:be.ExtractorLanguages(),
 		Area:be.ExtractorArea(),
@@ -22,6 +22,7 @@ func (be *BaseExtractor) ExtractorProgram(doc *goquery.Document,platformUnique s
 		Actors: be.ExtractorActors(),
 		PlatformUnique: be.platformUnique,
 		Category: be.ExtractorCategory(),
+		Caption: be.ExtractorCaption(),
 		}
 	return btp
 }
@@ -30,6 +31,9 @@ func (be *BaseExtractor) ExtractorTitle() (string){
 	return ""
 }
 func (be *BaseExtractor) ExtractorCategory() (string){
+	return ""
+}
+func (be *BaseExtractor) ExtractorCaption() (string){
 	return ""
 }
 
@@ -48,8 +52,8 @@ func (be *BaseExtractor) ExtractorReleaseDate() ([]string){
 	return nil
 }
 
-func (be *BaseExtractor) ExtractorDirector() (Director){
-	return Director{}
+func (be *BaseExtractor) ExtractorDirectors() ([]Director){
+	return []Director{}
 }
 
 func (be *BaseExtractor) ExtractorType() (string){

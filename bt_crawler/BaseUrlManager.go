@@ -7,6 +7,8 @@ type BaseUrlManager struct {
 	URLQueue list.List
 }
 type QueryInfo struct {
+	Status int
+	TryTimes int
 
 }
 

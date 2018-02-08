@@ -7,9 +7,9 @@ type Program struct {
 	Alias []string
 	Status string
 	Mark string
-	Director Director
+	Directors []Director
 	Type string
-	Languages Languages
+	Languages []string
 	Area string
 	ReleaseDate []string //上映日期
 	DoubanScore DoubanScore
@@ -20,6 +20,19 @@ type Program struct {
 	Actors []Actor
 	PlatformUnique string
 	Category string
+}
+
+func (p *Program) DirectorsToStr() string {
+	var directors []string
+	for _,drt :=range p.Directors{
+		directors = append(directors,drt.Name)
+	}
+	return strings.Join(directors,"/")
+}
+
+func (p *Program) LanguagesToStr() string  {
+
+	return strings.Join(p.Languages,"/")
 }
 
 func (p *Program) AliasToStr() string {
@@ -53,9 +66,9 @@ type IMBScore struct {
 }
 
 
-type Languages struct {
-	Language []string
-}
+//type Languages struct {
+//	Language string
+//}
 
 type Director struct {
 	Name string

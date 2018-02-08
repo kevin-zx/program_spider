@@ -13,7 +13,7 @@ func (be *BaseExtractor) ExtractorProgram(doc *goquery.Document,platformUnique s
 		Alias:be.ExtractorAlias(),
 		Status:be.ExtractorStatus(),
 		Mark:be.ExtractorMark(),
-		Directors:be.ExtractorDirector(),
+		Directors:be.ExtractorDirectors(),
 		Type:be.ExtractorType(),
 		Languages:be.ExtractorLanguages(),
 		Area:be.ExtractorArea(),
@@ -26,6 +26,8 @@ func (be *BaseExtractor) ExtractorProgram(doc *goquery.Document,platformUnique s
 		}
 	return btp
 }
+
+
 
 func (be *BaseExtractor) ExtractorTitle() (string){
 	return ""
@@ -63,8 +65,8 @@ func (be *BaseExtractor) ExtractorArea() (string){
 	return ""
 }
 
-func (be *BaseExtractor) ExtractorLanguages() (Languages){
-	return Languages{}
+func (be *BaseExtractor) ExtractorLanguages() ([]string){
+	return []string{}
 }
 
 func (be *BaseExtractor) ExtractorThunders() ([]ThunderData){

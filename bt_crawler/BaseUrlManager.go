@@ -1,10 +1,16 @@
 package bt_crawler
 
-import "container/list"
+import (
+	"container/list"
+	"github.com/kevin-zx/go-util/mysqlUtil"
+)
 
 type BaseUrlManager struct {
 	QueryMap map[string]QueryInfo
 	URLQueue list.List
+	Mu mysqlutil.MysqlUtil
+	PlatformPrefix string
+	SeedUrl string
 }
 type QueryInfo struct {
 	Status int

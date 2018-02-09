@@ -6,4 +6,3 @@ type BtDogCrawler struct {
 	bt_crawler.BaseCrawler
 }
 
-

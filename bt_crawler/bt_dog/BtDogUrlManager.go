@@ -36,3 +36,7 @@ func (bum *BtDogUrlManager) Next() (string,string) {
 	bum.startId ++
 	return fmt.Sprintf(bum.SeedUrl,bum.startId),fmt.Sprintf(bum.PlatformPrefix+"%d",bum.startId)
 }
+
+func (bum *BtDogUrlManager) Failed(url string) (){
+	bum.startId--
+}

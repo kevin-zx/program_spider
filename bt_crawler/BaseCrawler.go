@@ -8,24 +8,24 @@ import (
 )
 
 type BaseCrawler struct {
-	mu mysqlutil.MysqlUtil
-	bum BaseUrlManager
-	be BaseExtractor
+	Mu  mysqlutil.MysqlUtil
+	Bum BaseUrlManager
+	Be  BaseExtractor
 }
 
 func (bc *BaseCrawler) Run()  {
-	bc.be = BaseExtractor{}
-	bc.bum.Init()
-	for bc.bum.HasNext()  {
-		url,platformUnique := bc.bum.Next()
+	bc.Be = BaseExtractor{}
+	bc.Bum.Init()
+	for bc.Bum.HasNext()  {
+		url,platformUnique := bc.Bum.Next()
 		doc,err := bc.crawlerUrl(url)
 		if err != nil {
 			fmt.Println(err)
-			bc.bum.Failed(url)
+			bc.Bum.Failed(url)
 			continue
 		}
-		bc.bum.Complete(url)
-		program := bc.be.ExtractorProgram(doc,platformUnique)
+		bc.Bum.Complete(url)
+		program := bc.Be.ExtractorProgram(doc,platformUnique)
 		if program.Title != ""{
 			continue
 		}else {
@@ -40,7 +40,7 @@ func (bc *BaseCrawler) crawlerUrl(url string) (*goquery.Document,error) {
 }
 
 func (bc *BaseCrawler) InsertProgram(program *Program)  {
-	id,err := bc.mu.InsertId("INSERT IGNORE INTO program_data " +
+	id,err := bc.Mu.InsertId("INSERT IGNORE INTO program_data " +
 		"(`title`,`mark`,`actors`,`caption`,`platform_unique`,`type`" +
 			",`category`,`status`,`director`,`languages`) " +
 		"VALUE (?,?,?,?,?,?,?,?,?,?)",program.Title,program.Mark,program.ActorsToStr(),
@@ -57,7 +57,7 @@ func (bc *BaseCrawler) InsertProgram(program *Program)  {
 
 	if program.Alias != nil{
 		for _,al := range program.Alias  {
-			err = bc.mu.Insert("INSERT INTO program_alias (`program_id`,`alias`) " +
+			err = bc.Mu.Insert("INSERT INTO program_alias (`program_id`,`alias`) " +
 				"VALUE (?,?)",id,strings.TrimSpace(al))
 			if err != nil {
 				panic(err)
@@ -67,7 +67,7 @@ func (bc *BaseCrawler) InsertProgram(program *Program)  {
 
 	if program.Thunders != nil {
 		for _,td:=range program.Thunders {
-			err = bc.mu.Insert("INSERT INTO program_thunder_data " +
+			err = bc.Mu.Insert("INSERT INTO program_thunder_data " +
 				"(`program_id`,`url`,`name`,`type`) " +
 					"VALUE (?,?,?,?)",id,td.URL,td.Name,td.Type)
 			if err != nil {

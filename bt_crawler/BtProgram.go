@@ -18,6 +18,7 @@ type BtProgram struct {
 	Actors string
 	PlatformUnique string
 	Category string
+	Poster string
 }
 
 

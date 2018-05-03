@@ -20,6 +20,7 @@ type Program struct {
 	Actors []Actor
 	PlatformUnique string
 	Category string
+
 }
 
 func (p *Program) DirectorsToStr() string {

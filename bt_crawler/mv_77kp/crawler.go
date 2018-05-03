@@ -2,12 +2,14 @@ package main
 
 import (
 	"github.com/PuerkitoBio/goquery"
-	"dianying_spider/bt_crawler"
 	"fmt"
 	"strings"
 	"github.com/kevin-zx/go-util/mysqlUtil"
 	"strconv"
 	"time"
+	"net/http"
+	"log"
+	"program_spider/bt_crawler"
 )
 
 func main()  {
@@ -15,7 +17,17 @@ func main()  {
 	mu.InitMySqlUtil("111.231.24.24",3306,"remote","Iknowthat@@!221","crawler_data")
 	id := getStartId(&mu)
 	for i:=id+1;i<1000000;i++  {
-		doc,err := goquery.NewDocument(fmt.Sprintf("https://www.77kp.com/vod-detail-id-%d.html",i));
+		res, err := http.Get(fmt.Sprintf("https://www.77kp.com/vod-detail-id-%d.html",i))
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+		defer res.Body.Close()
+		if res.StatusCode != 200 {
+			log.Println(err.Error())
+			continue
+		}
+		doc,err := goquery.NewDocumentFromReader(res.Body)
 		if err != nil {
 			fmt.Println(err)
 			i--
@@ -37,6 +49,7 @@ func main()  {
 		btProgram.Category = doc.Find("div.position a:nth-child(2)").Text()
 		btProgram.Actors = extractActors(detailBoxElement)
 		btProgram.Mark = extractMark(detailBoxElement)
+		btProgram.Poster = extractPoster(detailBoxElement)
 		btProgram.Thunders = extractDownloadUrl(detailListElement)
 		btProgram.Caption = doc.Find("#detail-intro p").Text()
 		insert(&mu,btProgram)
@@ -46,9 +59,9 @@ func main()  {
 
 func insert(mu *mysqlutil.MysqlUtil,btp bt_crawler.BtProgram)  {
 	id,err := mu.InsertId("INSERT IGNORE INTO program_data " +
-		"(`title`,`mark`,`actors`,`caption`,`platform_unique`,`type`,`category`) " +
-		"VALUE (?,?,?,?,?,?,?)",
-			btp.Title,btp.Mark,btp.Actors,btp.Caption,btp.PlatformUnique,btp.Type,btp.Category)
+		"(`title`,`mark`,`actors`,`caption`,`platform_unique`,`type`,`category`,`poster`) " +
+		"VALUE (?,?,?,?,?,?,?,?)",
+			btp.Title,btp.Mark,btp.Actors,btp.Caption,btp.PlatformUnique,btp.Type,btp.Category,btp.Poster)
 	if err != nil {
 		panic(err)
 	}
@@ -57,7 +70,7 @@ func insert(mu *mysqlutil.MysqlUtil,btp bt_crawler.BtProgram)  {
 	}
 	if btp.Alias != nil{
 		for _,al := range btp.Alias  {
-			err = mu.Insert("INSERT INTO program_alias (`program_id`,`alias`) VALUE (?,?)",id,strings.TrimSpace(al))
+			err = mu.Insert("INSERT INTO program_aliases (`program_id`,`alias`) VALUE (?,?)",id,strings.TrimSpace(al))
 			if err != nil {
 				panic(err)
 			}
@@ -108,6 +121,11 @@ func extractActors(detailBox *goquery.Selection) (string) {
 
 func extractMark(detailBox *goquery.Selection) (string) {
 	return detailBox.Find(".detail-info dl:nth-child(2) dd").Text()
+}
+
+func extractPoster(detailBox *goquery.Selection) (string) {
+	poster,_ := detailBox.Find(".detail-pic img").Attr("src")
+	return poster
 }
 
 func extractDownloadUrl(detailList *goquery.Selection) []bt_crawler.ThunderData {

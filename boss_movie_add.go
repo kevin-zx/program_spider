@@ -42,9 +42,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	currentId := 1102
+	currentId := 289
 	for {
-		data,err := mu.SelectAll("SELECT * FROM program_data where id >= ? limit 10", currentId)
+		data,err := mu.SelectAll("SELECT * FROM program_data where id > ? limit 1000", currentId)
 		if err != nil {
 			panic(err)
 		}
@@ -58,6 +58,15 @@ func main() {
 			mark := d["mark"]
 			summary := d["caption"]
 			poster := d["poster"]
+			actorStr := d["actors"]
+			var members []movie_api.Member
+			for _,actName := range strings.Split(actorStr," "){
+				if strings.TrimSpace(actName) !="" {
+					member := movie_api.Member{Name:actName,Role:"主演"}
+					members = append(members, member)
+				}
+			}
+
 			resources := getResources(pid)
 			aliases := getAliases(pid)
 
@@ -68,14 +77,15 @@ func main() {
 						Summary:summary,
 						Poster:poster,
 						Resources:resources,
-						Aliases:aliases}
+						Aliases:aliases,
+						Members:members,}
+
 
 			pJson,err := json.Marshal(&p)
 			if err != nil {
 				panic(err)
 			}
-			//fmt.Println(err)
-			//fmt.Println(string(pJson))
+
 			rb := sendRequest("http://127.0.0.1:8000/sp_movie/api/programs/",string(pJson))
 			fmt.Println(p.Title,rb,currentId)
 
@@ -147,3 +157,4 @@ func getResources(pid int) []movie_api.Resource {
 	}
 	return resources
 }
+

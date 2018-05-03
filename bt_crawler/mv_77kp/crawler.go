@@ -24,7 +24,9 @@ func main()  {
 		}
 		defer res.Body.Close()
 		if res.StatusCode != 200 {
-			log.Println(err.Error())
+			//log.Println(err.Error())
+			i--
+			time.Sleep(10*time.Second)
 			continue
 		}
 		doc,err := goquery.NewDocumentFromReader(res.Body)

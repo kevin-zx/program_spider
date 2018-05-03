@@ -15,6 +15,7 @@ type Program struct {
 	EpisodesCount int `json:"episodes_count"`
 	Mark string `json:"mark"`
 	Resources []Resource `json:"resources"`
+	Members []Member `json:"members"`
 }
 
 type Resource struct {
@@ -24,5 +25,7 @@ type Resource struct {
 	Type string `json:"type"`
 }
 
-
-
+type Member struct {
+	Name string `json:"name"`
+	Role string `json:"role"`
+}

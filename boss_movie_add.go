@@ -42,11 +42,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	currentId := 289
+
+	currentId := 36451
 	for {
 		data,err := mu.SelectAll("SELECT * FROM program_data where id > ? limit 1000", currentId)
 		if err != nil {
 			panic(err)
+		}
+		if len(*data) == 0 {
+			break
 		}
 		for _,d :=range *data{
 
@@ -72,7 +76,7 @@ func main() {
 
 			p := movie_api.Program{Title:title,
 						Type: pType,
-						Category:category,
+						Categories:category,
 						Mark:mark,
 						Summary:summary,
 						Poster:poster,
